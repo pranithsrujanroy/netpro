@@ -13,17 +13,15 @@ Question:
  """
 import socket
 import ntplib
-import logging
 from time import ctime
 
 def print_time():
     ntp_client = ntplib.NTPClient()
     try:
         response = ntp_client.request('www.google.com')
-        print ctime(response.tx_time)
+        print(ctime(response.tx_time))
     except (ntplib.NTPException, socket.gaierror) as e:
-        #print(e)
-        logging.error('NTP client request error: %s', str(e))
+        print(e)
     
 if __name__ == '__main__':
     print_time()

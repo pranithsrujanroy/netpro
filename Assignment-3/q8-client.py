@@ -21,18 +21,18 @@ def start_client():
     host = socket.gethostname()
     s.connect((host, port))
     try:
-        msg = "Hello server...echo me this message!"
+        msg = b"Hello server...echo me this message!"
         print("Client sent: %s" %msg)
         s.send(msg)
         amt_recv = 0
         l = len(msg)
         while amt_recv < l:
-            data = s.recv(5)
+            data = s.recv(1024)
             amt_recv += len(data)
-            print("%s" %data)
-    except socket.errno, e:
+            print("Client received: %s" %data)
+    except socket.error as e:
         print("Socket error: %s" %str(e))
-    except Exception, e:
+    except Exception as e:
         print("%s" %str(e))
     finally:
         print("Closing connection by client...")

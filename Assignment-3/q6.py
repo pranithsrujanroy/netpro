@@ -18,6 +18,7 @@ RECV_BUFF_SIZE = 2048
 
 def modify_buff_size():
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     curr_buff_size = s.getsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF)
     print("Default send buffer size is %d" %curr_buff_size)
     
@@ -30,23 +31,24 @@ def modify_buff_size():
     
 def block_test():
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.setblocking(1)
-    s.settimeout(10)
-    s.bind(("127.0.0.1", 1233))
-    
-    socket_addr = s.getsockname()
+    s.setsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF, SEND_BUFF_SIZE)
+    s.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, RECV_BUFF_SIZE)
+    host = socket.gethostname()
+    s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    s.bind((host, 1235))
     print("Server listening...")
-    s.listen(1)
+    s.listen(5)
     while(1):
-        try:
-            conn, addr = s.accept()
-            print("Connected to %s" %str(addr))
-            conn.send("Server says hi")
-        except KeyboardInterrupt:
-            break
-        except socket.error, msg:
-            print("%s" %msg)
-            break
+        conn, addr = s.accept()		# accept the connection
+        s.setblocking(0)
+        print("Receiving data...")
+        data = conn.recv(1024)	
+        while data:			        # till data is coming
+            #print(data.decode('utf-8'))
+            data = conn.recv(1024)
+        print("All Data Received")	# Will execute when all data is received
+        conn.close()
+        break
     s.close()
     
 if __name__ == "__main__":

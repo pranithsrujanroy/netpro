@@ -20,18 +20,19 @@ def reuseaddr():
     print("Current address reuse %d" %cur_reuse)
     
     port = 1233
+    host = socket.gethostname()
     s.bind(('', port))
-    s.listen(1)
+    s.listen(5)
     s.settimeout(10)
-    print("Server listening...")
+    print("Server listening on ", s.getsockname())
     while 1:
         try:
             conn, addr = s.accept()
             print("Connected to %s" %str(addr[0]))
-            conn.send("Server says hi")
-        except KeyboardInterrupt:
+            conn.send(b"Server says hi")
+            conn.close()
             break
-        except socket.error, msg:
+        except socket.error as msg:
             print("%s" %msg)
             break
     s.close()

@@ -23,9 +23,10 @@ def start_server():
     s.bind((host, port))
     s.listen(1)
     print('Server listening...')
+    s.settimeout(10)
     while True:
         c, addr = s.accept()
-        c.settimeout(10)
+        #c.settimeout(10)
         data = c.recv(1024)
         #if data:
         print("Server received the below data: \n %s" %data)

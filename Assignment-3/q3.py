@@ -15,17 +15,23 @@ import sys
 def test_socket_timeout():
     try:
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    except socket.error, e:
-        print "Error creating socket: %s" % e
+    except socket.error as msg:
+        print("Error creating socket: %s" % msg)
         sys.exit(1)
     print("Default socket timeout: "+str(s.gettimeout()))
     s.settimeout(5)
     print("Current socket timeout: "+str(s.gettimeout()))
+    s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    port = 12345
+    host = socket.gethostname()
+    s.bind((host, port))
+    s.listen(1)
     try:
         while(True):
+            print("Waiting for connection from client..")
             c,addr = s.accept()
-    except socket.timeout, e:
-        print "Socket error: "+str(e)
+    except socket.timeout as msg:
+        print("Socket error: %s" % msg)
 
 if __name__ == "__main__":
     test_socket_timeout()

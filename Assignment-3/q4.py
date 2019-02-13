@@ -12,9 +12,12 @@ Question:
 
 import socket
 
-def find_service_name(port=53, protocol='udp'):
-    serv = socket.getservbyport(port, protocol)
-    print("Service name: "+str(serv))
-
+def find_service_name(port=80, protocol='udp'):
+    try:
+        print("Given port no is %d and protocol is %s" %(port, protocol))
+        serv = socket.getservbyport(port, protocol)
+        print("Service name: "+str(serv))
+    except socket.error as e:
+        print(str(e))
 if __name__ == "__main__":
     find_service_name()

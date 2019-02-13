@@ -16,7 +16,7 @@ def get_remote_machine_ip(remote_host):
     try:
         ip = socket.gethostbyname(remote_host)
         return ip
-    except socket.error, err_msg:
+    except (socket.error, err_msg):
         print("%s: %s", (remote_host, err_msg))
         
 def convert_ipv4(ipv4):
@@ -26,8 +26,7 @@ def convert_ipv4(ipv4):
     hexlify function of the binascii module helps to represent the binary data in a
     hexadecimal format.
     """
-    print "IP Address: %s => Packed: %s, Unpacked: %s"\
-    %(ipv4, hexlify(packed_ip), unpacked_ip)
+    print("IP Address: %s => Packed: %s, Unpacked: %s" %(ipv4, hexlify(packed_ip), unpacked_ip))
 
 if __name__ == "__main__":
     remote_host = "www.google.com"
